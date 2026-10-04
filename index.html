@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お風呂のシャンプー見分けつかない問題解消！ボトル識別ラベル一括ジェネレーター</title>
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #f43f5e;
+            --success: #10b981;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border: #cbd5e1;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        header p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+        }
+
+        .badge {
+            background-color: var(--secondary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            vertical-align: middle;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .main-grid {
+                grid-template-columns: 380px 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+
+        .panel h2 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--bg-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* フォーム要素 */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .color-pickers {
+            display: flex;
+            gap: 10px;
+        }
+
+        .color-pickers input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            background: none;
+        }
+
+        .color-pickers input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-pickers input[type="color"]::-webkit-color-swatch {
+            border: 2px solid var(--border);
+            border-radius: 50%;
+        }
+
+        .icon-select {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .icon-option {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            background: #fff;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: var(--text-sub);
+        }
+
+        .icon-option svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-main);
+            margin-bottom: 2px;
+        }
+
+        .icon-option.selected {
+            border-color: var(--primary);
+            background-color: #e0f2fe;
+            color: var(--primary-dark);
+        }
+        .icon-option.selected svg {
+            fill: var(--primary-dark);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            margin-bottom: 10px;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: var(--text-main);
+        }
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        .btn-danger {
+            background-color: #fee2e2;
+            color: var(--secondary);
+            font-size: 0.8rem;
+            padding: 6px;
+            margin-top: 10px;
+        }
+        .btn-danger:hover {
+            background-color: #fecaca;
+        }
+
+        /* プレビュー・印刷エリア */
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .print-tip {
+            font-size: 0.8rem;
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            color: #92400e;
+        }
+
+        .labels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        /* ラベル自体のデザイン */
+        .label-card {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            background: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .label-card.active {
+            border-color: var(--primary);
+            border-style: solid;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+
+        .label-preview-inner {
+            width: 100%;
+            border-radius: 8px;
+            padding: 16px 10px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 140px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .label-icon-wrapper {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .label-icon-wrapper svg {
+            width: 28px;
+            height: 28px;
+            fill: #fff;
+        }
+
+        .label-title {
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            word-break: break-all;
+        }
+
+        .label-subtitle {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-top: 2px;
+            background: rgba(0,0,0,0.15);
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .label-actions {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            display: flex;
+            gap: 10px;
+        }
+
+        /* 印刷設定 */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            header, .panel:not(#print-panel), .print-tip, .label-actions, .btn {
+                display: none !important;
+            }
+            .container {
+                max-width: none;
+            }
+            .main-grid {
+                display: block;
+            }
+            .panel {
+                box-shadow: none;
+                padding: 0;
+            }
+            .labels-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            .label-card {
+                border: 1px solid #ccc !important;
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>
+            お風呂のシャンプー見分けつかない問題解消！
+            <span class="badge">耐水ラベル対応</span>
+        </h1>
+        <p>家族みんながパッと見で区別できる、浴室ボトル用オリジナル識別ラベル一括ジェネレーター</p>
+    </header>
+
+    <div class="main-grid">
+        <!-- 左側：編集パネル -->
+        <div class="panel" id="editor-panel">
+            <h2>
+                <span id="editor-title">ラベルを編集</span>
+                <span style="font-size: 0.8rem; color: var(--text-sub);" id="editing-id"></span>
+            </h2>
+            
+            <form id="label-form">
+                <input type="hidden" id="label-id">
+                
+                <div class="form-group">
+                    <label for="label-name">品名（大きく表示）</label>
+                    <input type="text" id="label-name" required placeholder="例: シャンプー">
+                </div>
+
+                <div class="form-group">
+                    <label for="label-sub">サブテキスト（小さく表示）</label>
+                    <input type="text" id="label-sub" placeholder="例: さらさらタイプ / 家族用">
+                </div>
+
+                <div class="form-group">
+                    <label>アイコン選択</label>
+                    <div class="icon-select" id="icon-select-container">
+                        <!-- JSで動的生成 -->
+                    </div>
+                    <input type="hidden" id="label-icon" value="shampoo">
+                </div>
+
+                <div class="form-group">
+                    <label>背景カラー</label>
+                    <div class="color-pickers">
+                        <input type="color" id="label-color" value="#0ea5e9">
+                        <button type="button" class="btn btn-secondary" style="flex:1; padding: 6px; font-size: 0.85rem;" id="preset-color-btn">おすすめ配色に切替</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="save-btn">このラベルを更新する</button>
+                <button type="button" class="btn btn-secondary" id="add-new-btn">+ 新規ラベルとして追加</button>
+                <button type="button" class="btn btn-danger" id="delete-btn" style="display:none;">このラベルを削除</button>
+            </form>
+        </div>
+
+        <!-- 右側：プレビュー＆印刷パネル -->
+        <div class="panel" id="print-panel">
+            <div class="preview-header">
+                <h2>ラベル一覧（プレビュー）</h2>
+                <button type="button" class="btn btn-primary" style="width: auto; padding: 8px 16px; margin:0;" onclick="window.print()">🖨️ まとめて印刷する</button>
+            </div>
+
+            <div class="print-tip">
+                💡 <strong>綺麗に作るコツ：</strong>
+                100円ショップ等で買える<strong>「耐水・防水ラベル用紙（インクジェット用）」</strong>に印刷し、切断面を少し丸く角丸カットするとお風呂でも剥がれにくくなります！
+            </div>
+
+            <div class="labels-grid" id="labels-container">
+                <!-- JSで動的生成 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // アイコン定義（SVGパス）
+    const icons = {
+        shampoo: '<path d="M9 3H15V5H9V3M11 6H13V8H11V6M6 9H18C19.1 9 20 9.9 20 11V21C20 22.1 19.1 23 18 23H6C4.9 23 4 22.1 4 21V11C4 9.9 4.9 9 6 9M6 11V21H18V11H6Z"/>',
+        conditioner: '<path d="M12 2C9.24 2 7 4.24 7 7V9H6C4.89 9 4 9.89 4 11V21C4 22.1 4.89 23 6 23H18C19.1 23 20 22.1 20 21V11C20 9.89 19.1 9 18 9H17V7C17 4.24 14.76 2 12 2M12 4C13.66 4 15 5.34 15 7V9H9V7C9 5.34 10.34 4 12 4M6 11H18V21H6V11Z"/>',
+        bodysoap: '<path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,13.85 19.36,15.55 18.3,16.9C17.65,15.1 15.9,13.8 13.8,13.8H10.2C8.1,13.8 6.35,15.1 5.7,16.9C4.64,15.55 4,13.85 4,12A8,8 0 0,1 12,4M12,6A3,3 0 0,0 9,9A3,3 0 0,0 12,12A3,3 0 0,0 15,9A3,3 0 0,0 12,6Z"/>',
+        face: '<path d="M12,2C6.5,2 2,6.5 2,12C2,17.5 6.5,22 12,22C17.5,22 22,17.5 22,12C22,6.5 17.5,2 12,2M12,4C16.42,4 20,7.58 20,12C20,16.42 16.42,20 12,20C7.58,20 4,16.42 4,12C4,7.58 7.58,4 12,4M12,6C9.79,6 8,7.79 8,10H10C10,8.9 10.9,8 12,8C13.1,8 14,8.9 14,10H16C16,7.79 14.21,6 12,6M12,13C10.34,13 9,14.34 9,16C9,17.66 10.34,19 12,19C13.66,19 15,17.66 15,16C15,14.34 13.66,13 12,13Z"/>',
+        kids: '<path d="M12,2A3,3 0 0,1 15,5A3,3 0 0,1 12,8A3,3 0 0,1 9,5A3,3 0 0,1 12,2M19,15C19,13.89 18.1,13 17,13C16.4,13 15.88,13.25 15.5,13.65C14.36,12.65 12.83,12 11,12C9.17,12 7.64,12.65 6.5,13.65C6.12,13.25 5.6,13 5,13C3.9,13 3,13.89 3,15V17H5V22H11V18H13V22H19V17H21V15H19Z"/>',
+        baby: '<path d="M12 2C9.38 2 7.25 4.13 7.25 6.75C7.25 8.1 7.8 9.3 8.7 10.15C5.5 11.3 3.25 14.35 3.25 18C3.25 21.3 5.95 24 9.25 24H14.75C18.05 24 20.75 21.3 20.75 18C20.75 14.35 18.5 11.3 15.3 10.15C16.2 9.3 16.75 8.1 16.75 6.75C16.75 4.13 14.62 2 12 2M12 4C13.53 4 14.75 5.22 14.75 6.75C14.75 8.28 13.53 9.5 12 9.5C10.47 9.5 9.25 8.28 9.25 6.75C9.25 5.22 10.47 4 12 4Z"/>',
+        pet: '<path d="M12,2C10.89,2 10,2.89 10,4C10,4.23 10.05,4.45 10.13,4.66C7.5,5.66 5.5,8.1 5.5,11C5.5,13.79 7.42,16.14 10,16.82V19H9C7.89,19 7,19.89 7,21C7,22.11 7.89,23 9,23H15C16.11,23 17,22.11 17,21C17,19.89 16.11,19 15,19H14V16.82C16.58,16.14 18.5,13.79 18.5,11C18.5,8.1 16.5,5.66 13.87,4.66C13.95,4.45 14,4.23 14,4C14,2.89 13.11,2 12,2Z"/>',
+        oil: '<path d="M11,4H13V6H11V4M10,7H14V9H10V7M8,10H16C17.1,10 18,10.9 18,12V21C18,22.1 17.1,23 16,23H8C6.9,23 6,22.1 6,21V12C6,10.9 6.9,10 8,10M8,12V21H16V12H8Z"/>',
+        peeling: '<path d="M12 2A10 10 0 0 0 2 12A10 10 0 0 0 12 22A10 10 0 0 0 22 12A10 10 0 0 0 12 2M12 4C14.1 4 16 4.8 17.4 6.1C15.6 7.4 14.3 9.5 14 12C12.8 11.2 11.5 10 10 9C10.7 7.1 12 5.5 12 4M6.1 17.4C7.4 15.6 9.5 14.3 12 14C11.2 12.8 10 11.5 9 10C7.1 10.7 5.5 12 5.5 12A8 8 0 0 1 6.1 17.4Z"/>',
+        sparkle: '<path d="M12,2L14.39,8.26L20.36,9.27L15.93,13.97L17.18,20.18L12,17.27L6.82,20.18L8.07,13.97L3.64,9.27L9.61,8.26L12,2Z"/>'
+    };
+
+    const presetColors = ['#0ea5e9', '#f43f5e', '#10b981', '#8b5cf6', '#f59e0b', '#ec4899', '#64748b', '#0284c7'];
+
+    // 初期データ
+    const defaultLabels = [
+        { id: '1', name: 'シャンプー', sub: 'さらさらタイプ', icon: 'shampoo', color: '#0ea5e9' },
+        { id: '2', name: 'コンディショナー', sub: 'しっとりタイプ', icon: 'conditioner', color: '#8b5cf6' },
+        { id: '3', name: 'ボディーソープ', sub: '家族みんな用', icon: 'bodysoap', color: '#10b981' },
+        { id: '4', name: '洗顔フォーム', sub: 'スクラブ入り', icon: 'face', color: '#f59e0b' }
+    ];
+
+    let labels = JSON.parse(localStorage.getItem('bath_labels')) || defaultLabels;
+    let currentColorIndex = 0;
+
+    // 初期化
+    document.addEventListener('DOMContentLoaded', () => {
+        renderIconSelector();
+        renderLabels();
+        loadLabelToForm(labels[0]); // 最初のラベルをフォームにセット
+
+        // イベントリスナー
+        document.getElementById('label-form').addEventListener('submit', handleFormSubmit);
+        document.getElementById('add-new-btn').addEventListener('click', handleAddNew);
+        document.getElementById('delete-btn').addEventListener('click', handleDelete);
+        document.getElementById('preset-color-btn').addEventListener('click', () => {
+            currentColorIndex = (currentColorIndex + 1) % presetColors.length;
+            document.getElementById('label-color').value = presetColors[currentColorIndex];
+            liveUpdate();
+        });
+
+        // ライブプレビュー用入力監視
+        ['label-name', 'label-sub', 'label-color'].forEach(id => {
+            document.getElementById(id).addEventListener('input', liveUpdate);
+        });
+    });
+
+    // アイコン選択肢の生成
+    function renderIconSelector() {
+        const container = document.getElementById('icon-select-container');
+        container.innerHTML = '';
+        for (const [key, svgPath] of Object.entries(icons)) {
+            const div = document.createElement('div');
+            div.className = `icon-option ${key === 'shampoo' ? 'selected' : ''}`;
+            div.dataset.icon = key;
+            div.innerHTML = `<svg viewBox="0 0 24 24">${svgPath}</svg><span>${key}</span>`;
+            div.addEventListener('click', () => {
+                document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('selected'));
+                div.classList.add('selected');
+                document.getElementById('label-icon').value = key;
+                liveUpdate();
+            });
+            container.appendChild(div);
+        }
+    }
+
+    // ラベル一覧の描画
+    function renderLabels() {
+        const container = document.getElementById('labels-container');
+        container.innerHTML = '';
+
+        labels.forEach(label => {
+            const card = document.createElement('div');
+            card.className = `label-card ${document.getElementById('label-id').value === label.id ? 'active' : ''}`;
+            card.dataset.id = label.id;
+            
+            card.innerHTML = `
+                <div class="label-preview-inner" style="background-color: ${label.color};">
+                    <div class="label-icon-wrapper">
+                        <svg viewBox="0 0 24 24">${icons[label.icon] || icons.shampoo}</svg>
+                    </div>
+                    <div class="label-title">${escapeHTML(label.name)}</div>
+                    ${label.sub ? `<div class="label-subtitle">${escapeHTML(label.sub)}</div>` : ''}
+                </div>
+                <div class="label-actions">
+                    <span>クリックして編集</span>
+                </div>
+            `;
+
+            card.addEventListener('click', () => {
+                loadLabelToForm(label);
+                document.querySelectorAll('.label-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+            });
+
+            container.appendChild(card);
+        });
+
+        localStorage.setItem('bath_labels', JSON.stringify(labels));
+    }
+
+    // フォームにデータをロード
+    function loadLabelToForm(label) {
+        document.getElementById('label-id').value = label.id;
+        document.getElementById('label-name').value = label.name;
+        document.getElementById('label-sub').value = label.sub || '';
+        document.getElementById('label-icon').value = label.icon;
+        document.getElementById('label-color').value = label.color;
+        
+        // アイコン選択状態更新
+        document.querySelectorAll('.icon-option').forEach(el => {
+            if (el.dataset.icon === label.icon) {
+                el.classList.add('selected');
+            } else {
+                el.classList.remove('selected');
+            }
+        });
+
+        document.getElementById('editor-title').textContent = 'ラベルを編集';
+        document.getElementById('editing-id').textContent = `(ID: ${label.id})`;
+        document.getElementById('delete-btn').style.display = 'block';
+        document.getElementById('save-btn').textContent = 'このラベルを更新する';
+    }
+
+    // ライブアップデート（編集中にプレビューを即時反映するためのダミーデータ更新）
+    function liveUpdate() {
+        const id = document.getElementById('label-id').value;
+        const name = document.getElementById('label-name').value || '品名';
+        const sub = document.getElementById('label-sub').value;
+        const icon = document.getElementById('label-icon').value;
+        const color = document.getElementById('label-color').value;
+
+        const index = labels.findIndex(l => l.id === id);
+        if (index !== -1) {
+            labels[index] = { id, name, sub, icon, color };
+            renderLabelsWithoutReset();
+        }
+    }
+
+    // フォーカスを失わずにカードだけ再描画
+    function renderLabelsWithoutReset() {
+        const container = document.getElementById('labels-container');
+        const cards = container.children;
+        
+        labels.forEach((label, idx) => {
+            if(cards[idx]) {
+                const inner = cards[idx].querySelector('.label-preview-inner');
+                inner.style.backgroundColor = label.color;
+                inner.querySelector('.label-icon-wrapper svg').innerHTML = icons[label.icon] || icons.shampoo;
+                inner.querySelector('.label-title').textContent = label.name;
+                const subEl = inner.querySelector('.label-subtitle');
+                if (label.sub) {
+                    if (subEl) {
+                        subEl.textContent = label.sub;
+                    } else {
+                        const newSub = document.createElement('div');
+                        newSub.className = 'label-subtitle';
+                        newSub.textContent = label.sub;
+                        inner.appendChild(newSub);
+                    }
+                } else if (subEl) {
+                    subEl.remove();
+                }
+            }
+        });
+        localStorage.setItem('bath_labels', JSON.stringify(labels));
+    }
+
+    // フォーム送信（保存・更新）
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        const id = document.getElementById('label-id').value;
+        const name = document.getElementById('label-name').value;
+        const sub = document.getElementById('label-sub').value;
+        const icon = document.getElementById('label-icon').value;
+        const color = document.getElementById('label-color').value;
+
+        const index = labels.findIndex(l => l.id === id);
+        if (index !== -1) {
+            labels[index] = { id, name, sub, icon, color };
+        } else {
+            labels.push({ id: Date.now().toString(), name, sub, icon, color });
+        }
+
+        renderLabels();
+        alert('ラベルを保存しました！');
+    }
+
+    // 新規追加モードへ
+    function handleAddNew() {
+        document.getElementById('label-id').value = 'new_' + Date.now();
+        document.getElementById('label-name').value = '新しいボトル';
+        document.getElementById('label-sub').value = '詳細';
+        document.getElementById('label-icon').value = 'oil';
+        document.getElementById('label-color').value = '#f43f5e';
+        
+        document.querySelectorAll('.icon-option').forEach(el => {
+            if (el.dataset.icon === 'oil') el.classList.add('selected');
+            else el.classList.remove('selected');
+        });
+
+        document.getElementById('editor-title').textContent = '新規ラベル追加';
+        document.getElementById('editing-id').textContent = '(新規)';
+        document.getElementById('delete-btn').style.display = 'none';
+        document.getElementById('save-btn').textContent = 'リストに追加する';
+
+        // アクティブ状態解除
+        document.querySelectorAll('.label-card').forEach(c => c.classList.remove('active'));
+    }
+
+    // 削除
+    function handleDelete() {
+        const id = document.getElementById('label-id').value;
+        if (labels.length <= 1) {
+            alert('最低1つのラベルは残す必要があります。');
+            return;
+        }
+        if (confirm('このラベルを削除してもよろしいですか？')) {
+            labels = labels.filter(l => l.id !== id);
+            renderLabels();
+            loadLabelToForm(labels[0]);
+        }
+    }
+
+    // 簡易HTMLエスケープ
+    function escapeHTML(str) {
+        return str.replace(/[&'`"<>]/g, function(match) {
+            return {
+                '&': '&amp,',
+                "'": '&#x27;',
+                '`': '&#x60;',
+                '"': '&quot;',
+                '<': '&lt;',
+                '>': '&gt;',
+            }[match]
+        });
+    }
+</script>
+
+</body>
+</html>
